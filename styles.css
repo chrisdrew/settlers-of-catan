@@ -1,0 +1,224 @@
+:root {
+    --unit: .06vw;
+    --scale: 110;
+
+    --hex-width-constant: 1;
+    --hex-height-constant: 0.866;
+
+    --hex-width: calc(var(--scale) * var(--hex-width-constant) * var(--unit));
+    --hex-height: calc(var(--scale) * var(--hex-height-constant) * var(--unit));
+
+    --spacer-height: calc(var(--hex-height) / 2);
+
+    --gutter-positive: calc(var(--hex-width) / 8);
+    --gutter-negative: calc(var(--gutter-positive) * -1);
+
+    --column-width: calc(var(--gutter-positive) * 3);
+    --row-height: calc(var(--hex-height) / 2);
+
+
+}
+
+body {
+    background: #00656f;
+}
+
+#wrapper {
+    /* background: white; */
+    display: block;
+    width: calc(var(--hex-width) * 5.26);
+    height: calc(var(--hex-height) * 7);
+    /* margin-top: calc(var(--row-height) / 4 * -1); */
+    /* padding: calc(var(--row-height) / 2) 0; */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+}
+
+#hex-layer {
+    
+}
+
+#token-layer {
+    position: absolute;
+    top: calc(var(--row-height) * 2);
+    left: calc(var(--column-width) * 2);
+    width: calc(100% - (var(--column-width) * 4));
+    height: calc(100% - (var(--row-height) * 4));
+
+    box-shadow: 0 0 0 2px white;
+}
+
+#road-layer {
+    /* padding: calc(var(--row-height) / 2) 0; */
+    position: absolute;
+    top: calc(var(--row-height) * 2);
+    left: calc(var(--column-width) * 2);
+    width: calc(100% - (var(--column-width) * 4));
+    height: calc(100% - (var(--row-height) * 4));
+
+    /* border: 2px dashed green; */
+    box-shadow: 0 0 0 1px gold;
+}
+
+#building-layer {
+    /* margin: calc(var(--row-height) / 2) 0; */
+    position: absolute;
+    top: calc(var(--row-height) * 2);
+    left: calc(var(--column-width) * 2);
+    width: calc(100% - (var(--column-width) * 4));
+    height: calc(100% - (var(--row-height) * 4));
+    
+    /* border: 2px dashed red; */
+    box-shadow: 0 0 0 1px red;
+}
+
+.column {
+    display: inline-block;
+    float: left;
+    margin: 0 var(--gutter-negative);
+}
+
+[data-type=spacer] {
+    width: 0;
+    height: var(--spacer-height);
+}
+
+.hex {
+    width: var(--hex-width);
+    height: var(--hex-height);
+    position: relative;
+}
+
+.hex[data-token]:before {           /* styles for the tokens */ 
+    content: attr(data-token);
+    display: block;
+    width: calc(var(--gutter-positive) * 3);
+    height: calc(var(--gutter-positive) * 3);
+    background-color: white;
+    color: black;
+    text-align: center;
+    line-height: calc(var(--gutter-positive) * 3);
+    border-radius: 50%;
+    font-size: calc(var(--gutter-positive) * 2);
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+}
+
+.hex[data-has-robber]:after {
+    content: '';
+    
+}
+
+.hex[data-type=desert] {
+    background-image: url('images/hex-desert.svg');
+}
+
+.hex[data-type=field] {
+    background-image: url('images/hex-field.svg');
+}
+
+.hex[data-type=forest] {
+    background-image: url('images/hex-forest.svg');
+}
+
+.hex[data-type=hill] {
+    background-image: url('images/hex-hill.svg');
+}
+
+.hex[data-type=mountain] {
+    background-image: url('images/hex-mountain.svg');
+}
+
+.hex[data-type=pasture] {
+    background-image: url('images/hex-pasture.svg');
+}
+
+.hex[data-type=sea] {
+    background-image: url('images/hex-sea.svg');
+}
+
+/* .column:nth-of-type(3) > *:nth-of-type(2):before {
+    content: '';
+    background: red;
+    width: 10px;
+    height: 10px;
+    display: block;
+    border-radius: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    position: absolute;
+    left: calc(var(--gutter-positive) * 2);
+    top: 0;
+} */
+
+/* .column:nth-of-type(3) > *:nth-of-type(2):after {
+    content: '';
+    background: red;
+    width: 10px;
+    height: 10px;
+    display: block;
+    border-radius: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    position: absolute;
+    left: 0;
+    top: calc(var(--hex-height) / 2);
+} */
+
+/* .column:nth-of-type(4) > *:nth-of-type(2):before {
+    content: '';
+    background: red;
+    width: 10px;
+    height: 10px;
+    display: block;
+    border-radius: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    position: absolute;
+    left: calc(var(--gutter-positive) * 2);
+    top: 0;
+} */
+
+/* .column:nth-of-type(4) > *:nth-of-type(1):after {
+    content: '';
+    background: red;
+    width: 10px;
+    height: 10px;
+    display: block;
+    border-radius: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    position: absolute;
+    left: 0;
+    top: calc(var(--hex-height) / 2);
+} */
+
+.building-site {
+    background: white;
+    width: calc(var(--gutter-positive) * 1);
+    height: calc(var(--gutter-positive) * 1);
+    border-radius: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    position: absolute;
+
+    left: calc(var(--column-width) * 2);        /* this determines the "column" */
+    top: calc(var(--row-height) * 2);           /* this determines the "row" */
+    margin-left: var(--gutter-negative);        /* offset the building to the left */
+    /*margin-left: var(--gutter-positive);        /* offset the building to the right */
+}
+
+.road-site {
+    background: white;
+    width: calc(var(--gutter-positive) / 2);
+    height: calc(var(--gutter-positive) * 2.5);
+    transform: translate3d(-50%, -50%, 0) rotate(90deg);
+    position: absolute;
+
+    left: calc(var(--column-width) * 1);        /* this determines the "column" */
+    top: calc(var(--row-height) * 2);           /* this determines the "row" */
+}
+
+.clearfix {
+    clear: both;
+}
