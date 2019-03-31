@@ -9,6 +9,9 @@
 </head>
 <body>
 
+    <button id="connect" onclick="connectToPeer()">Connect</button>
+    <button id="ping" onclick="ping()" style="float: right;">Ping</button>
+
     <div id="wrapper">
 
         <div id="hex-layer">
@@ -99,7 +102,13 @@
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.js"></script>
     <script src="scripts.js"></script>
+    <script>
+        (function () {
+            initialize();
+        })();
+    </script>
 
 </body>
 </html>
