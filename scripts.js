@@ -5,8 +5,8 @@ function initialize() {
     this.conn = null;
 
     initializeBoard(boardModel);
-    initializeMyPlayer(myPlayer);
-    initializeMyPeer(myPlayer);
+    initializeMyPlayer(this.myPlayer);
+    initializeMyPeer(this.myPlayer);
 
 } 
 
