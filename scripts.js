@@ -1,5 +1,9 @@
 function initialize() {
 
+    this.oldGameState = null;
+    this.gameState = {
+        diceRoll: null,
+    };
     var boardModel = [];
     this.myPlayer = {};
     this.conn = null;
@@ -167,31 +171,47 @@ function initializeMyPeer(myPlayer) {
 function initializeConnection() {
     this.myPeer.on('connection', function (conn) {
         conn.on('data', function (data) {
-            alert(data);
-        });
-        console.log('peer connection established')
-    });
-}
-
-document.querySelector('#connect').onclick = function () {
-    connectToPeer(this.myPlayer);
-}.bind(this);
-
-function connectToPeer(myPlayer) {
-    var otherPlayer = prompt('Join a player:');
-    this.conn = this.myPeer.connect(otherPlayer);
-
-    this.conn.on('open', function () {
-        this.conn.send(this.myPlayer.name + ' joined your game!');
+            this.oldGameState = this.gameState;     // keep the old game state
+            this.gameState = data;                  // get the new game state
+            console.log('new gameState: ' + this.gameState);
+            updateGameState();
+        }.bind(this));
+        console.log('a player has connected to your game!');
     }.bind(this));
 }
 
-document.querySelector('#ping').onclick = function () {
-    ping(this.conn);
+document.querySelector('#connect').onclick = function () {
+    connectToPeer(this.myPeer, this.myPlayer);
 }.bind(this);
 
-function ping(conn) {
-    if (conn) {
-        conn.send('pinged by ' + this.myPlayer.name);
+function connectToPeer(myPeer, myPlayer) {
+    var otherPlayer = prompt('Enter the name of another player to join their game:');
+    this.conn = myPeer.connect(otherPlayer);
+
+    if(this.conn) {
+        this.conn.send(myPlayer.name + ' joined your game!');
     }
+}
+
+document.querySelector('#roll-dice').onclick = function() {  
+    rollDice();
+};
+
+function rollDice() {
+
+    if (this.conn) {
+        this.gameState.diceRoll = random(1,12);
+        console.log('dice roll: ' + this.gameState.diceRoll);
+        updateDiceRoll();
+        this.conn.send(gameState);
+    }
+}
+
+function updateGameState() {        // update the entire state of the game for this client
+
+    updateDiceRoll();
+}
+
+function updateDiceRoll() {         // update the dice roll for this client
+    document.querySelector('#dice').innerHTML = this.gameState.diceRoll;
 }
