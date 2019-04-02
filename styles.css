@@ -23,6 +23,10 @@ body {
     background: #00656f;
 }
 
+button[disabled] {
+    opacity: .5;
+}
+
 #wrapper {
     /* background: white; */
     display: block;
