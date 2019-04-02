@@ -3,6 +3,7 @@ function initialize() {
     this.oldGameState = null;
     this.gameState = {
         diceRoll: null,
+        whoseTurn: null,
     };
     var boardModel = [];
     this.myPlayer = {};
@@ -183,6 +184,7 @@ function initializeMyPeer() {
 
 function initializeConnection() {
     this.myPeer.on('connection', function (conn) {
+        this.gameState.whoseTurn = 'player1';
         conn.on('data', function (data) {
             this.oldGameState = this.gameState;     // keep the old game state
             this.gameState = data;                  // get the new game state
@@ -190,6 +192,7 @@ function initializeConnection() {
             updateGameState();
         }.bind(this));
         console.log(this.otherPlayer.name + ' has connected to your game!');
+        updateGameState();
     }.bind(this));
 }
 
@@ -206,6 +209,40 @@ function connectToPeer() {
     }
 }
 
+function updateGameState() {                // update the entire state of the game for this client
+
+    updateDiceRoll();
+
+    if (this.gameState.whoseTurn === this.myPlayer.name) {
+        nextTurn(true);
+    } else {
+        nextTurn(false)
+    }
+}
+
+/* ENDING A TURN AND SETTING UP FOR THE NEXT TURN */
+
+document.querySelector('#end-turn').onclick = function () {
+    endTurn();
+};
+
+function endTurn() {
+
+    if (this.conn) {
+        this.gameState.whoseTurn = this.otherPlayer.name;
+        console.log('you\'ve ended your turn');
+        nextTurn(false);
+        this.conn.send(gameState);
+    }
+}
+
+function nextTurn(isItMyTurnNow) {
+    document.querySelector('#end-turn').disabled = !isItMyTurnNow;      // enable the 'end turn' button if it's my turn or vise versa
+    document.querySelector('#roll-dice').disabled = !isItMyTurnNow;     // enable the 'roll dice' button if it's my turn or vise versa
+}
+
+/* DICE ROLLING STUFF */
+
 document.querySelector('#roll-dice').onclick = function() {  
     rollDice();
 };
@@ -220,11 +257,7 @@ function rollDice() {
     }
 }
 
-function updateGameState() {        // update the entire state of the game for this client
-
-    updateDiceRoll();
-}
-
-function updateDiceRoll() {         // update the dice roll for this client
+function updateDiceRoll() {                 // update the dice roll for this client
     document.querySelector('#dice').innerHTML = this.gameState.diceRoll;
+    document.querySelector('#roll-dice').disabled = true;                       // disable the 'roll dice' button
 }
