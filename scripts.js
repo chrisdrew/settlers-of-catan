@@ -6,11 +6,10 @@ function initialize() {
     };
     var boardModel = [];
     this.myPlayer = {};
+    this.otherPlayer = {};
     this.conn = null;
 
     initializeBoard(boardModel);
-    initializeMyPlayer(this.myPlayer);
-    initializeMyPeer(this.myPlayer);
 
 } 
 
@@ -142,13 +141,27 @@ function assignTokensToHexes(tokens, boardModel) {
     }
 }
 
-function initializeMyPlayer(myPlayer) {
-    var name = prompt('Enter your name:');
-    myPlayer.name = name;
+document.querySelector('#player1').onclick = function () {
+    initializeMyPlayer('player1');
+};
+
+document.querySelector('#player2').onclick = function () {
+    initializeMyPlayer('player2');
+};
+
+function initializeMyPlayer(name) {
+    this.myPlayer.name = name;
+    console.log('my player has been created as ' + this.myPlayer.name);
+    initializeMyPeer();
+
+    this.otherPlayer.name = name === 'player1' ? 'player2' : 'player1';
+    document.querySelector('#' + name).disabled = true;
+    document.querySelector('#' + this.otherPlayer.name).style.display = 'none';
+    document.querySelector('#connect').disabled = false;
 }
 
-function initializeMyPeer(myPlayer) {
-    this.myPeer = new Peer(myPlayer.name, {
+function initializeMyPeer() {
+    this.myPeer = new Peer(this.myPlayer.name, {
         key: 'lwjd5qra8257b9',
         config: {'iceServers': [
             {
@@ -173,23 +186,23 @@ function initializeConnection() {
         conn.on('data', function (data) {
             this.oldGameState = this.gameState;     // keep the old game state
             this.gameState = data;                  // get the new game state
-            console.log('new gameState: ' + this.gameState);
+            console.log(this.gameState);
             updateGameState();
         }.bind(this));
-        console.log('a player has connected to your game!');
+        console.log(this.otherPlayer.name + ' has connected to your game!');
     }.bind(this));
 }
 
 document.querySelector('#connect').onclick = function () {
-    connectToPeer(this.myPeer, this.myPlayer);
-}.bind(this);
+    connectToPeer();
+};
 
-function connectToPeer(myPeer, myPlayer) {
-    var otherPlayer = prompt('Enter the name of another player to join their game:');
-    this.conn = myPeer.connect(otherPlayer);
+function connectToPeer() {
+    this.conn = myPeer.connect(this.otherPlayer.name);
 
     if(this.conn) {
-        this.conn.send(myPlayer.name + ' joined your game!');
+        this.conn.send(this.myPlayer.name + ' joined your game!');
+        document.querySelector('#connect').disabled = true;
     }
 }
 
