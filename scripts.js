@@ -1,10 +1,17 @@
 function initialize() {
 
-    this.oldGameState = null;
     this.gameState = {
-        diceRoll: null,
+        setupStep: 1,
         whoseTurn: null,
+        diceRoll: null,
     };
+
+    this.oldGameState = {
+        setupStep: 1,
+        whoseTurn: null,
+        diceRoll: null,
+    };
+
     var boardModel = [];
     this.myPlayer = {};
     this.otherPlayer = {};
@@ -203,21 +210,32 @@ document.querySelector('#connect').onclick = function () {
 function connectToPeer() {
     this.conn = myPeer.connect(this.otherPlayer.name);
 
-    if(this.conn) {
+    if (this.conn) {
         this.conn.send(this.myPlayer.name + ' joined your game!');
         document.querySelector('#connect').disabled = true;
     }
 }
 
-function updateGameState() {                // update the entire state of the game for this client
+function updateGameState() {                  // update the entire state of the game for this client
 
-    updateDiceRoll();
-
-    if (this.gameState.whoseTurn === this.myPlayer.name) {
-        nextTurn(true);
-    } else {
-        nextTurn(false)
+    if (this.gameState.diceRoll === null) {         // if it's the first turn of the game
+        updateDiceRoll();
     }
+
+    if (this.gameState.diceRoll !== this.oldGameState.diceRoll) {       // if the dice roll is different than it was last time we did updateGameState()
+        updateDiceRoll();                                                   // update the dice roll
+    }
+
+    if (this.gameState.whoseTurn !== this.oldGameState.whoseTurn) {     // if it's someone else's turn
+
+        if (this.gameState.whoseTurn === this.myPlayer.name) {              // if it's my turn
+            UpdateUI(true);
+        } else {                                                            // if it's the other player's turn
+            UpdateUI(false)
+        }
+
+    }
+
 }
 
 /* ENDING A TURN AND SETTING UP FOR THE NEXT TURN */
@@ -228,17 +246,46 @@ document.querySelector('#end-turn').onclick = function () {
 
 function endTurn() {
 
+    var currentPlayer = null;
+    var nextPlayer = null;
+
+    if (this.gameState.setupStep < 5) {
+
+        switch (this.gameState.setupStep) {
+            case 1:                                 // player 1 gets setup turn 1 of 4
+            case 2:                                 // player 2 gets setup turn 2 of 4
+                currentPlayer = 'player1';
+                nextPlayer = 'player2';
+                this.gameState.setupStep++;
+                break;
+            case 3:                                 // player 2 gets setup turn 3 of 4
+            case 4:                                 // player 1 gets setup turn 4 of 4
+                currentPlayer = 'player2';
+                nextPlayer = 'player1';
+                this.gameState.setupStep++;
+                break;
+        }
+        
+    } else {
+        currentPlayer = this.myPlayer.name;
+        nextPlayer = this.otherPlayer.name;
+    }
+
     if (this.conn) {
-        this.gameState.whoseTurn = this.otherPlayer.name;
+        this.oldGameState.whoseTurn = currentPlayer;        // update the old game state to reflect that it was just my turn
+        this.gameState.whoseTurn = nextPlayer;              // update the new game state to show that it's the other player's turn now
         console.log('you\'ve ended your turn');
-        nextTurn(false);
-        this.conn.send(gameState);
+        this.conn.send(this.gameState);
+        updateGameState();
     }
 }
 
-function nextTurn(isItMyTurnNow) {
-    document.querySelector('#end-turn').disabled = !isItMyTurnNow;      // enable the 'end turn' button if it's my turn or vise versa
-    document.querySelector('#roll-dice').disabled = !isItMyTurnNow;     // enable the 'roll dice' button if it's my turn or vise versa
+function UpdateUI(isItMyTurn) {
+    var elements = document.querySelectorAll('.disabled-until-my-turn');
+
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].disabled = !isItMyTurn;          // enable all UI for the player whose turn it is and disable all UI for the other player
+    }
 }
 
 /* DICE ROLLING STUFF */
@@ -252,12 +299,11 @@ function rollDice() {
     if (this.conn) {
         this.gameState.diceRoll = random(1,12);
         console.log('dice roll: ' + this.gameState.diceRoll);
-        updateDiceRoll();
-        this.conn.send(gameState);
+        this.conn.send(this.gameState);
+        updateGameState();
     }
 }
 
 function updateDiceRoll() {                 // update the dice roll for this client
     document.querySelector('#dice').innerHTML = this.gameState.diceRoll;
-    document.querySelector('#roll-dice').disabled = true;                       // disable the 'roll dice' button
 }
