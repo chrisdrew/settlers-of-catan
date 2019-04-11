@@ -3,46 +3,54 @@ function initialize() {
     this.gameState = {
         setupStep: 1,
         whoseTurn: null,
-        diceRoll: null,
+        dice: {
+            die1: '',
+            die2: '',
+            sum: '',
+        },
     };
 
     this.oldGameState = {
         setupStep: 1,
         whoseTurn: null,
-        diceRoll: null,
+        dice: {
+            die1: '',
+            die2: '',
+            sum: '',
+        },
     };
 
-    var boardModel = [];
+    this.boardModel = [];
     this.myPlayer = {};
     this.otherPlayer = {};
     this.conn = null;
 
-    initializeBoard(boardModel);
+    initializeBoard();
 
 } 
 
-function initializeBoard(boardModel) {
+function initializeBoard() {
 
-    mapBoard(boardModel);
+    mapBoard();
 
-    var forestsCount = countHexesByType('forest', boardModel);
-    var hillsCount = countHexesByType('hill', boardModel);
-    var pasturesCount = countHexesByType('pasture', boardModel);
-    var fieldsCount = countHexesByType('field', boardModel);
-    var mountainsCount = countHexesByType('mountain', boardModel);
-    var desertsCount = countHexesByType('desert', boardModel);
-    var seasCount = countHexesByType('sea', boardModel);
-    var spacersCount = countHexesByType('spacer', boardModel);
+    var forestsCount = countHexesByType('forest', this.boardModel);
+    var hillsCount = countHexesByType('hill', this.boardModel);
+    var pasturesCount = countHexesByType('pasture', this.boardModel);
+    var fieldsCount = countHexesByType('field', this.boardModel);
+    var mountainsCount = countHexesByType('mountain', this.boardModel);
+    var desertsCount = countHexesByType('desert', this.boardModel);
+    var seasCount = countHexesByType('sea', this.boardModel);
+    var spacersCount = countHexesByType('spacer', this.boardModel);
 
     var tokensCount = forestsCount + hillsCount + pasturesCount + fieldsCount + mountainsCount;     // count how many tokens we need
 
     var tokens = generateTokens(tokensCount);           // generate the appropriate number of tokens
-    assignTokensToHexes(tokens, boardModel);            // randomly assign tokens to hexes
+    assignTokensToHexes(tokens);                        // randomly assign tokens to hexes
 
-    console.log(boardModel);
+    console.log(this.boardModel);
 }
 
-function mapBoard(boardModel) {       // create an object model of the game board
+function mapBoard() {       // create an object model of the game board
 
     var boardDOM = document.querySelector('#hex-layer');        
     var columns = boardDOM.children;
@@ -51,7 +59,7 @@ function mapBoard(boardModel) {       // create an object model of the game boar
 
     for (var i = 0; i < columns.length; i++) {
 
-        boardModel.push([]);                                     // create a new array for each column
+        this.boardModel.push([]);                                     // create a new array for each column
 
         var rows = columns[i].children;
 
@@ -63,7 +71,7 @@ function mapBoard(boardModel) {       // create an object model of the game boar
 
             var type = row.getAttribute('data-type');
 
-            boardModel[i].push({});
+            this.boardModel[i].push({});
 
             if (type !== 'desert' && type !== 'sea' && type !== 'spacer') {
 
@@ -72,10 +80,10 @@ function mapBoard(boardModel) {       // create an object model of the game boar
                 var id = (i + 1) + '-' + (rowCount + 1);            // adding 1 to i and ii lets us start counting at col 1 and row 1
                 row.id = id;
 
-                boardModel[i][ii].id = id;
+                this.boardModel[i][ii].id = id;
             }
 
-            boardModel[i][ii].type = type;
+            this.boardModel[i][ii].type = type;
         }
 
     }
@@ -90,11 +98,11 @@ function convertNodeListToArray(nodelist) {
     return arr;
 }
 
-function countHexesByType(type, boardModel) {
+function countHexesByType(type) {
     var count = 0;
 
-    for (var i = 0; i < boardModel.length; i++) {
-        var column = boardModel[i];
+    for (var i = 0; i < this.boardModel.length; i++) {
+        var column = this.boardModel[i];
         for (var ii = 0; ii < column.length; ii++) {
             var row = column[ii];
             if (row.type === type) {
@@ -127,11 +135,11 @@ function generateTokens(count) {            // remember that we need (number of 
     return tokens;
 }
 
-function assignTokensToHexes(tokens, boardModel) {
+function assignTokensToHexes(tokens) {
     var rowCount = 0;
     
-    for (var i = 0; i < boardModel.length; i++) {
-        var column = boardModel[i];
+    for (var i = 0; i < this.boardModel.length; i++) {
+        var column = this.boardModel[i];
         rowCount = 0;
         for (var ii = 0; ii < column.length; ii++) {
             var row = column[ii];
@@ -218,13 +226,7 @@ function connectToPeer() {
 
 function updateGameState() {                  // update the entire state of the game for this client
 
-    if (this.gameState.diceRoll === null) {         // if it's the first turn of the game
-        updateDiceRoll();
-    }
-
-    if (this.gameState.diceRoll !== this.oldGameState.diceRoll) {       // if the dice roll is different than it was last time we did updateGameState()
-        updateDiceRoll();                                                   // update the dice roll
-    }
+    updateDiceRoll();
 
     if (this.gameState.whoseTurn !== this.oldGameState.whoseTurn) {     // if it's someone else's turn
 
@@ -297,13 +299,16 @@ document.querySelector('#roll-dice').onclick = function() {
 function rollDice() {
 
     if (this.conn) {
-        this.gameState.diceRoll = random(1,12);
-        console.log('dice roll: ' + this.gameState.diceRoll);
+        this.gameState.dice.die1 = random(1,6);
+        this.gameState.dice.die2 = random(1,6);
+        this.gameState.dice.sum = this.gameState.dice.die1 + this.gameState.dice.die2;
+        console.log('dice roll: ' + this.gameState.dice.die1 + ' ' + this.gameState.dice.die2);
         this.conn.send(this.gameState);
         updateGameState();
+        getActivatedHexes();
     }
 }
 
 function updateDiceRoll() {                 // update the dice roll for this client
-    document.querySelector('#dice').innerHTML = this.gameState.diceRoll;
+    document.querySelector('#dice').innerHTML = this.gameState.dice.die1 + ' ' + this.gameState.dice.die2;
 }

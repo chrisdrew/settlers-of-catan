@@ -75,7 +75,7 @@ button[disabled] {
     height: calc(100% - (var(--row-height) * 4));
     
     /* border: 2px dashed red; */
-    box-shadow: 0 0 0 1px red;
+    /* box-shadow: 0 0 0 1px red; */
 }
 
 .column {
@@ -95,7 +95,7 @@ button[disabled] {
     position: relative;
 }
 
-.hex[data-token]:before {           /* styles for the tokens */ 
+.hex[data-token]::before {           /* styles for the tokens */ 
     content: attr(data-token);
     display: block;
     width: calc(var(--gutter-positive) * 3);
@@ -113,9 +113,19 @@ button[disabled] {
     transform: translate3d(-50%, -50%, 0);
 }
 
-.hex[data-has-robber]:after {
+.hex[data-has-robber]::before {
     content: '';
-    
+}
+
+.hex[data-is-activated]::after {
+    content: '';
+    display: block;
+    width: var(--hex-width);
+    height: var(--hex-height);
+    position: relative;
+    z-index: 1;
+    background-image: url('images/hex-highlight.svg');
+    opacity: 0.7;
 }
 
 .hex[data-type=desert] {
@@ -199,16 +209,16 @@ button[disabled] {
 } */
 
 .building-site {
-    background: white;
+    background: blue;
     width: calc(var(--gutter-positive) * 1);
     height: calc(var(--gutter-positive) * 1);
     border-radius: 50%;
     transform: translate3d(-50%, -50%, 0);
     position: absolute;
 
-    left: calc(var(--column-width) * 2);        /* this determines the "column" */
-    top: calc(var(--row-height) * 2);           /* this determines the "row" */
-    margin-left: var(--gutter-negative);        /* offset the building to the left */
+    /*left: calc(var(--column-width) * 2);        /* this determines the "column" */
+    /*top: calc(var(--row-height) * 2);           /* this determines the "row" */
+    /*margin-left: var(--gutter-negative);        /* offset the building to the left */
     /*margin-left: var(--gutter-positive);        /* offset the building to the right */
 }
 
@@ -219,10 +229,96 @@ button[disabled] {
     transform: translate3d(-50%, -50%, 0) rotate(90deg);
     position: absolute;
 
-    left: calc(var(--column-width) * 1);        /* this determines the "column" */
-    top: calc(var(--row-height) * 2);           /* this determines the "row" */
+    /*left: calc(var(--column-width) * 1);        /* this determines the "column" */
+    /*top: calc(var(--row-height) * 2);           /* this determines the "row" */
 }
 
 .clearfix {
     clear: both;
+}
+
+.building-site[id*="A-"] {
+    left: calc(var(--column-width) * 0);        /* this determines the "column" */
+}
+
+
+
+
+
+.building-site[id*="B-"] {
+    left: calc(var(--column-width) * 2);        /* this determines the "column" */
+}
+
+.building-site[id*="C-"] {
+    left: calc(var(--column-width) * 4);        /* this determines the "column" */
+}
+
+.building-site[id*="D-"] {
+    left: calc(var(--column-width) * 6);        /* this determines the "column" */
+}
+
+.building-site[id*="E-"] {
+    left: calc(var(--column-width) * 8);        /* this determines the "column" */
+}
+
+.building-site[id*="F-"] {
+    left: calc(var(--column-width) * 10);        /* this determines the "column" */
+}
+
+
+
+.building-site[id*="-A"] {
+    top: calc(var(--row-height) * 0);           /* this determines the "row" */
+}
+
+.building-site[id*="-B"] {
+    top: calc(var(--row-height) * 1);           /* this determines the "row" */
+}
+
+.building-site[id*="-C"] {
+    top: calc(var(--row-height) * 2);           /* this determines the "row" */
+}
+
+.building-site[id*="-D"] {
+    top: calc(var(--row-height) * 3);           /* this determines the "row" */
+}
+
+.building-site[id*="-E"] {
+    top: calc(var(--row-height) * 4);           /* this determines the "row" */
+}
+
+.building-site[id*="-F"] {
+    top: calc(var(--row-height) * 5);           /* this determines the "row" */
+}
+
+.building-site[id*="-G"] {
+    top: calc(var(--row-height) * 6);           /* this determines the "row" */
+}
+
+.building-site[id*="-H"] {
+    top: calc(var(--row-height) * 7);           /* this determines the "row" */
+}
+
+.building-site[id*="-I"] {
+    top: calc(var(--row-height) * 8);           /* this determines the "row" */
+}
+
+.building-site[id*="-J"] {
+    top: calc(var(--row-height) * 9);           /* this determines the "row" */
+}
+
+.building-site[id*="-K"] {
+    top: calc(var(--row-height) * 10);          /* this determines the "row" */
+}
+
+
+
+.building-site:nth-of-type(2n) {
+    margin-left: var(--gutter-negative);        /* offset the building to the left */
+    /*margin-left: var(--gutter-positive);        /* offset the building to the right */
+}
+
+.building-site:nth-of-type(2n+1) {
+    /*margin-left: var(--gutter-negative);        /* offset the building to the left */
+    margin-left: var(--gutter-positive);        /* offset the building to the right */
 }
