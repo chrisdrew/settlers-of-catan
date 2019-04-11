@@ -63,7 +63,7 @@ button[disabled] {
     height: calc(100% - (var(--row-height) * 4));
 
     /* border: 2px dashed green; */
-    box-shadow: 0 0 0 1px gold;
+    /* box-shadow: 0 0 0 1px gold; */
 }
 
 #building-layer {
@@ -74,6 +74,8 @@ button[disabled] {
     width: calc(100% - (var(--column-width) * 4));
     height: calc(100% - (var(--row-height) * 4));
     
+    z-index: 100;
+
     /* border: 2px dashed red; */
     /* box-shadow: 0 0 0 1px red; */
 }
@@ -210,8 +212,8 @@ button[disabled] {
 
 .building-site {
     background: blue;
-    width: calc(var(--gutter-positive) * 1);
-    height: calc(var(--gutter-positive) * 1);
+    width: calc(var(--gutter-positive) * 1.5);
+    height: calc(var(--gutter-positive) * 1.5);
     border-radius: 50%;
     transform: translate3d(-50%, -50%, 0);
     position: absolute;
@@ -220,6 +222,21 @@ button[disabled] {
     /*top: calc(var(--row-height) * 2);           /* this determines the "row" */
     /*margin-left: var(--gutter-negative);        /* offset the building to the left */
     /*margin-left: var(--gutter-positive);        /* offset the building to the right */
+}
+
+.building-site[data-type="null"] {
+    background: white;
+    border-radius: 50%;
+}
+
+.building-site[data-type="settlement"] {
+    background: blue;
+    border-radius: 50%;
+}
+
+.building-site[data-type="city"] {
+    background: blue;
+    border-radius: 0;
 }
 
 .road-site {

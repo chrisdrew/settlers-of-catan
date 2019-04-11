@@ -168,12 +168,27 @@ document.querySelector('#player2').onclick = function () {
 function initializeMyPlayer(name) {
     this.myPlayer.name = name;
     console.log('my player has been created as ' + this.myPlayer.name);
+    initializeBuildings();
     initializeMyPeer();
 
     this.otherPlayer.name = name === 'player1' ? 'player2' : 'player1';
     document.querySelector('#' + name).disabled = true;
     document.querySelector('#' + this.otherPlayer.name).style.display = 'none';
     document.querySelector('#connect').disabled = false;
+}
+
+function initializeBuildings() {
+    this.myPlayer.selectedBuildingType = 'null';
+    var buildingSites = document.querySelectorAll('.building-site');
+
+    for (var i = 0; i < buildingSites.length; i++) {
+
+        buildingSites[i].onclick = function (id) {          // black magic that attaches an event listener to each element in the loop
+            return function () {
+                placeBuilding(id);
+            };
+        }(buildingSites[i].id);
+    }
 }
 
 function initializeMyPeer() {
@@ -311,4 +326,10 @@ function rollDice() {
 
 function updateDiceRoll() {                 // update the dice roll for this client
     document.querySelector('#dice').innerHTML = this.gameState.dice.die1 + ' ' + this.gameState.dice.die2;
+}
+
+function placeBuilding(where) {
+    var site = document.querySelector('#' + where);
+    site.setAttribute('data-resident', this.myPlayer.name);
+    site.setAttribute('data-type', this.myPlayer.selectedBuildingType);
 }
