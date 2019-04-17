@@ -157,12 +157,12 @@ function assignTokensToHexes(tokens) {
     }
 }
 
-document.querySelector('#player1').onclick = function () {
-    initializeMyPlayer('player1');
+document.querySelector('#bbd1').onclick = function () {
+    initializeMyPlayer('bbd1');
 };
 
-document.querySelector('#player2').onclick = function () {
-    initializeMyPlayer('player2');
+document.querySelector('#bbd2').onclick = function () {
+    initializeMyPlayer('bbd2');
 };
 
 function initializeMyPlayer(name) {
@@ -171,7 +171,7 @@ function initializeMyPlayer(name) {
     initializeBuildings();
     initializeMyPeer();
 
-    this.otherPlayer.name = name === 'player1' ? 'player2' : 'player1';
+    this.otherPlayer.name = name === 'bbd1' ? 'bbd2' : 'bbd1';
     document.querySelector('#' + name).disabled = true;
     document.querySelector('#' + this.otherPlayer.name).style.display = 'none';
     document.querySelector('#connect').disabled = false;
@@ -214,7 +214,7 @@ function initializeMyPeer() {
 
 function initializeConnection() {
     this.myPeer.on('connection', function (conn) {
-        this.gameState.whoseTurn = 'player1';
+        this.gameState.whoseTurn = 'bbd1';
         conn.on('data', function (data) {
             this.oldGameState = this.gameState;     // keep the old game state
             this.gameState = data;                  // get the new game state
@@ -271,14 +271,14 @@ function endTurn() {
         switch (this.gameState.setupStep) {
             case 1:                                 // player 1 gets setup turn 1 of 4
             case 2:                                 // player 2 gets setup turn 2 of 4
-                currentPlayer = 'player1';
-                nextPlayer = 'player2';
+                currentPlayer = 'bbd1';
+                nextPlayer = 'bbd2';
                 this.gameState.setupStep++;
                 break;
             case 3:                                 // player 2 gets setup turn 3 of 4
             case 4:                                 // player 1 gets setup turn 4 of 4
-                currentPlayer = 'player2';
-                nextPlayer = 'player1';
+                currentPlayer = 'bbd2';
+                nextPlayer = 'bbd1';
                 this.gameState.setupStep++;
                 break;
         }
