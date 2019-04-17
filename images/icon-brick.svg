@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="54" viewBox="0 0 36 54">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <title>brick</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <path class="cls-1" d="M36,0V18H2V34H17V24H15V22h4V36H0V6H4V8H2v8H34V2H0V0ZM32,22v2h2V34H23v2H34V52H2V42H4V40H0V54H36V22H32Z"/>
+    </g>
+  </g>
+</svg>

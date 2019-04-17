@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="54" viewBox="0 0 36 54">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <title>ore</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <path class="cls-1" d="M27.41,0H8.59L.29,8.29,1.71,9.71,9.41,2h8.18l7.7,7.71,1.42-1.42L20.41,2h6.18L34,9.41V17H26.41L18,8.59l-9,9v9.82l8,8V46H28V44H19V34.59l-8-8V18.41l7-7L25.59,19H34V44.59L26.59,52H18.41L10,43.59v-9l-8-8V18.41L10.41,10,9,8.59l-9,9V45.41L8.59,54H27.41L36,45.41V8.59Zm-18,52L2,44.59V29.41l6,6v9L15.59,52ZM26,37V28H17V17h2v9h9V37Z"/>
+    </g>
+  </g>
+</svg>
