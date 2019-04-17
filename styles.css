@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
 :root {
     --unit: .06vw;
     --scale: 110;
@@ -16,11 +18,20 @@
     --column-width: calc(var(--gutter-positive) * 3);
     --row-height: calc(var(--hex-height) / 2);
 
+    --pasture-color: #40c463;
+    --field-color: #ffb448;
+    --forest-color: #037443;
+    --hills-color: #b9675c;
+    --mountain-color: #606060;
+    --desert-color: #ffe8a9;
+    --sea-color: #0d828e;
 
+    --bbd1-color: #183f7b;
+    --bbd2-color: #cb1c00;
 }
 
 body {
-    background: #00656f;
+    background: var(--sea-color);
 }
 
 button[disabled] {
@@ -107,12 +118,14 @@ button[disabled] {
     text-align: center;
     line-height: calc(var(--gutter-positive) * 3);
     border-radius: 50%;
-    font-size: calc(var(--gutter-positive) * 2);
+    font-size: calc(var(--gutter-positive) * 1.8);
     font-weight: bold;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
+    font-family: montserrat, sans-serif;
+    color: #555;
 }
 
 .hex[data-has-robber]::before {
@@ -218,6 +231,8 @@ button[disabled] {
     transform: translate3d(-50%, -50%, 0);
     position: absolute;
 
+    display: none;
+
     /*left: calc(var(--column-width) * 2);        /* this determines the "column" */
     /*top: calc(var(--row-height) * 2);           /* this determines the "row" */
     /*margin-left: var(--gutter-negative);        /* offset the building to the left */
@@ -246,6 +261,8 @@ button[disabled] {
     transform: translate3d(-50%, -50%, 0) rotate(90deg);
     position: absolute;
 
+    display: none;
+
     /*left: calc(var(--column-width) * 1);        /* this determines the "column" */
     /*top: calc(var(--row-height) * 2);           /* this determines the "row" */
 }
@@ -257,10 +274,6 @@ button[disabled] {
 .building-site[id*="A-"] {
     left: calc(var(--column-width) * 0);        /* this determines the "column" */
 }
-
-
-
-
 
 .building-site[id*="B-"] {
     left: calc(var(--column-width) * 2);        /* this determines the "column" */
